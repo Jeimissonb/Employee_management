@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,5 +44,19 @@ public class EmployeeController {
 				orElseThrow(() -> new ResourceNotFoundException("Employee not found with informed id: "+id));
 		return ResponseEntity.ok(employee);
 	}
+	
+	//update employee
+	@PutMapping("/employees/{id}")
+	public ResponseEntity<Employee> updateEmployee (@PathVariable Long id, @RequestBody Employee dataEmployee){
+		Employee employee = employeeRepository.findById(id).
+				orElseThrow(() -> new ResourceNotFoundException("Employee to update not found with this id:"+id));
+		employee.setFirstName(dataEmployee.getFirstName());
+		employee.setLastName(dataEmployee.getLastName());
+		employee.setEmailId(dataEmployee.getEmailId());
+		
+		Employee employeeNew = employeeRepository.save(employee);
+		return ResponseEntity.ok(employeeNew);
+	}
+	
 	
 }
